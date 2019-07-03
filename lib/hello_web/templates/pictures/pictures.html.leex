@@ -1,0 +1,20 @@
+<div class="row">
+  <%= for {id, pic} <- @pictures do %>
+    <%= live_link to: Routes.live_path(@socket, HelloWeb.PicturesLive, id) do %>
+      <div class="column">
+        <%= pic.author %>
+        <img src="<%= picture_url(pic.img, :thumb) %>">
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<%= if @selected_picture do %>
+  <hr>
+  <center>
+    <label><%= @selected_picture.author %></label>
+    <img src="<%= picture_url(@selected_picture.img, :big) %>">
+  </center>
+<% end %>
+
+

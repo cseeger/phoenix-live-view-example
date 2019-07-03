@@ -10,47 +10,28 @@ defmodule HelloWeb.PicturesLive do
   }
 
   def render(assigns) do
-    pictures = @pictures
-    ~L"""
-    <div class="row">
-      <%= for {id, pic} <- pictures do %>
-        <%= live_link to: Routes.live_path(@socket, HelloWeb.PicturesLive, id) do %>
-          <div class="column">
-            <%= pic.author %>
-            <img src="<%= picture_url(pic.img, :thumb) %>">
-          </div>
-        <% end %>
-      <% end %>
-    </div>
-
-    <%= if @selected_picture do %>
-      <hr>
-      <center>
-        <label><%= @selected_picture.author %></label>
-        <img src="<%= picture_url(@selected_picture.img, :big) %>">
-      </center>
-    <% end %>
-    """
+    Phoenix.View.render(HelloWeb.PicturesView, "pictures.html", assigns)
   end
 
   # /pictures/:id
   def handle_params(%{"id" => id}, _uri, socket) do
     picture = @pictures[id]
-    {:noreply, assign(socket, :selected_picture, picture)}
+    socket = socket
+      |> assign(:selected_picture, picture)
+      |> assign(:pictures, @pictures)
+    {:noreply, socket}
   end
 
   # /pictures
   def handle_params(_, _uri, socket) do
-    {:noreply, assign(socket, :selected_picture, nil)}
+    socket = socket
+      |> assign(:selected_picture, nil)
+      |> assign(:pictures, @pictures)
+    {:noreply, socket}
   end
 
   def mount(_session, socket) do
     socket = assign(socket, :selected_picture, nil)
     {:ok, socket}
   end
-
-  defp picture_url(img, :thumb),
-    do: "#{img}?w=250fit=crop"
-  defp picture_url(img, :big),
-    do: "#{img}?w=800&h=500fit=crop"
 end
