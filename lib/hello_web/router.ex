@@ -18,11 +18,8 @@ defmodule HelloWeb.Router do
   scope "/", HelloWeb do
     pipe_through :browser
 
-    get "/hello/:name", HelloController, :world
     get "/", PageController, :index
 
-    live "/welcome", WelcomeLive
-    live "/clock", ClockLive
     live "/pictures", PicturesLive
     live "/pictures/:id", PicturesLive
   end
